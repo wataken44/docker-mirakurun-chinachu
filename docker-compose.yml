@@ -9,8 +9,8 @@ services:
       - "40772:40772"
     volumes:
      - /etc/localtime:/etc/localtime:ro
-     - ./mirakurun/conf:/usr/local/etc/mirakurun
-     - ./mirakurun/db:/usr/local/var/db/mirakurun
+     - /mnt/data_01/etc/mirakurun:/usr/local/etc/mirakurun
+     - /mnt/data_01/var/db/mirakurun:/usr/local/var/db/mirakurun
 
   chinachu:
     build:
@@ -25,9 +25,9 @@ services:
      - "5353:5353/udp"
     volumes:
      - /etc/localtime:/etc/localtime:ro
-     - ./chinachu/conf/config.json:/usr/local/chinachu/config.json
-     - ./chinachu/conf/rules.json:/usr/local/chinachu/rules.json
-     - ./chinachu/data:/usr/local/chinachu/data
-     - ./recorded:/usr/local/chinachu/recorded
+     - /mnt/data_01/etc/chinachu/config.json:/usr/local/chinachu/config.json
+     - /mnt/data_01/etc/chinachu/rules.json:/usr/local/chinachu/rules.json
+     - /mnt/data_01/etc/chinachu/data:/usr/local/chinachu/data
+     - /mnt/data_01/ts:/usr/local/chinachu/recorded
     links:
      - mirakurun:container-mirakurun

@@ -28,4 +28,7 @@ fi
 /etc/init.d/chinachu-operator start
 /etc/init.d/chinachu-wui start
 
+# for akane
+crond -b 
+
 tail -f /dev/null

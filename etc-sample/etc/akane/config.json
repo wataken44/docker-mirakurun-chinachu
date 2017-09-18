@@ -1,0 +1,16 @@
+{
+  "chinachu": {
+    "apiEndpoint": "http://localhost:10772/api/",
+    "username": "akari",
+    "password": "bakuhatsu"
+  },
+  "akane": {
+    "log": "/usr/local/akane/meta/log.txt",
+    "lockFileDir": "/usr/local/akane/tmp/",
+    "metaFileDir": "/usr/local/akane/meta/",
+    "maxProcessingTaskCount": 1,
+    "processCommands": ["/usr/local/akane/command-sample/encode.py"],
+    "processTimeRatio": 5.5,
+    "processTimeConstant": 400
+  }
+}

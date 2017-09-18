@@ -28,6 +28,12 @@ services:
      - /mnt/data_01/etc/chinachu/config.json:/usr/local/chinachu/config.json
      - /mnt/data_01/etc/chinachu/rules.json:/usr/local/chinachu/rules.json
      - /mnt/data_01/etc/chinachu/data:/usr/local/chinachu/data
+     - /mnt/data_01/etc/akane/config.json:/usr/local/akane/config.json
+     - /mnt/data_01/etc/akane/command-sample/encode-config.json:/usr/local/akane/command-sample/encode-config.json
+     - /mnt/data_01/etc/akane/command-sample/libx264-hq-ts.ffpreset:/usr/local/akane/command-sample/libx264-hq-ts.ffpreset
+     - /mnt/data_01/tmp:/usr/local/akane/tmp
+     - /mnt/data_01/meta:/usr/local/akane/meta
      - /mnt/data_01/ts:/usr/local/chinachu/recorded
+     - /mnt/data_01/mp4:/usr/local/akane/encoded
     links:
      - mirakurun:container-mirakurun

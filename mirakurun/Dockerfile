@@ -1,5 +1,5 @@
 FROM alpine:3.6
-LABEL maintainer "h-mineta <h-mineta@0nyx.net>"
+LABEL maintainer "wataken44 <wataken44@example.com>"
 
 ENV DOCKER="YES"
 
@@ -16,6 +16,7 @@ RUN set -x \
 		curl \
 		ca-certificates \
 		util-linux \
+		musl-utils \
 	\
 	&& apk add --virtual .build-deps \
 		git \
@@ -31,6 +32,7 @@ RUN set -x \
 		libevent-dev \
 		pcsc-lite-dev \
 		libusb-dev \
+		mercurial \
 	\
 	&& npm install pm2 -g \
 	\
@@ -39,11 +41,18 @@ RUN set -x \
 	# mirakurun
 	&& npm install mirakurun@latest -g --unsafe --production \
 	\
+	# arib
+	&& hg clone http://hg.honeyplanet.jp/pt1 -r b25 /tmp/b25 \
+	&& cd /tmp/b25/arib25/src \
+    && sed -i 's/ldconfig/echo ldconfig/g' Makefile \
+    && make \
+    && make install \
+    \
 	# recpt1
 	&& git clone https://github.com/stz2012/recpt1 /tmp/recpt1 \
 	&& cd /tmp/recpt1/recpt1 \
 	&& ./autogen.sh \
-	&& ./configure \
+	&& ./configure --enable-b25 \
 	&& sed -i '/#include <sys\/msg.h>/d' recpt1core.h \
 	&& sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1.c \
 	&& sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1ctl.c \

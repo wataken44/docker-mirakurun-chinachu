@@ -1,0 +1,7 @@
+{
+  "log": "/usr/local/akane/meta/log-encode.txt",
+  "encodedDir": "/usr/local/akane/encoded/",
+  "encodedExt": ".mp4",
+  "encodedInfoFile": "/usr/local/akane/meta/encoded.json",
+  "command": "/usr/local/chinachu/usr/bin/ffmpeg -y -i '<recorded>' -f mp4 -vcodec libx264 -fpre /usr/local/akane/command-sample/libx264-hq-ts.ffpreset -r 30000/1001 -aspect 16:9 -s 1280x720 -b:v 1800000 -minrate 1800000 -pass 1 -an -movflags faststart '<encoded>' 2>&1 > /usr/local/akane/meta/log-ffmpeg.txt && /usr/local/chinachu/usr/bin/ffmpeg -y -i '<recorded>' -f mp4 -vcodec libx264 -fpre /usr/local/akane/command-sample/libx264-hq-ts.ffpreset -r 30000/1001 -aspect 16:9 -s 1280x720 -bufsize 20000k -b:v 1800000 -minrate 1800000 -pass 2 -movflags faststart '<encoded>' 2>&1 >> /usr/local/akane/meta/log-ffmpeg.txt"
+}

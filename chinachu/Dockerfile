@@ -69,6 +69,16 @@ RUN set -x \
 COPY services.sh /usr/local/bin
 COPY config.sample.json ${WORK_DIR}
 
+# akane
+RUN set -x \
+    && apk upgrade --update \
+    && apk add python git\
+    && cd /usr/local \
+    && git clone https://github.com/wataken44/akane \
+    && mkdir -p akane/encoded akane/tmp akane/meta \
+    && echo '10,40   *       *       *       *       python /usr/local/akane/dispatch.py' >> /var/spool/cron/crontabs/root
+
 WORKDIR ${WORK_DIR}
+
 CMD ["/usr/local/bin/services.sh"]
 EXPOSE 10772 20772 5353

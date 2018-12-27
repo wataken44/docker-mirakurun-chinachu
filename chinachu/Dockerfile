@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM node:8.9-alpine
 LABEL maintainer "h-mineta <h-mineta@0nyx.net>"
 
 ENV DOCKER="YES"
@@ -7,15 +7,13 @@ ARG BRANCH="master"
 
 ARG WORK_DIR="/usr/local/chinachu"
 
-ARG USER_NAME="chinachu"
-ARG USER_ID="1000"
+#node container default value
+ARG USER_NAME="node" 
 
 RUN set -x \
 	&& apk upgrade --update \
 	&& apk add \
 		bash \
-		'nodejs>=6.2.0' \
-		nodejs-npm \
 		coreutils \
 		curl \
 		procps \
@@ -38,15 +36,14 @@ RUN set -x \
 		eudev-dev \
 		libevent-dev \
 	\
-	&& adduser -D -u ${USER_ID} -h ${WORK_DIR} ${USER_NAME} \
 	&& mkdir -p ${WORK_DIR} \
 	&& git clone ${REPOSITORY} ${WORK_DIR} \
 	&& chown -R ${USER_NAME} ${WORK_DIR} \
 	&& cd ${WORK_DIR} \
 	&& git checkout ${BRANCH} \
 	&& echo 1 | sudo -u ${USER_NAME} ./chinachu installer \
-	&& ./chinachu service operator  initscript | sudo -u ${USER_NAME} tee /tmp/chinachu-operator \
-	&& ./chinachu service wui initscript | sudo -u ${USER_NAME} tee /tmp/chinachu-wui \
+	&& sudo -u ${USER_NAME} ./chinachu service operator initscript | tee /tmp/chinachu-operator \
+	&& sudo -u ${USER_NAME} ./chinachu service wui initscript | tee /tmp/chinachu-wui \
 	&& sudo -u ${USER_NAME} mkdir log \
 	\
 	#&& chown root. /tmp/chinachu-operator /tmp/chinachu-wui \
@@ -56,9 +53,9 @@ RUN set -x \
 	\
 	# cleaning
 	&& cd / \
-	&& npm cache clean \
+	&& npm cache verify \
 	&& apk del --purge .build-deps \
-	&& rm -rf /tmp/* \
+	#&& rm -rf /tmp/* \
 	&& rm -rf /var/cache/apk/*
 
 	# forward request and error logs to docker log collector

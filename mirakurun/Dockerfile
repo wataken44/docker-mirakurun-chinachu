@@ -1,5 +1,5 @@
-FROM alpine:3.6
-LABEL maintainer "wataken44 <wataken44@example.com>"
+FROM node:8.9-alpine
+LABEL maintainer "wataken44"
 
 ENV DOCKER="YES"
 
@@ -7,8 +7,6 @@ RUN set -x \
 	&& apk upgrade --update \
 	&& apk add \
 		bash \
-		'nodejs>=6.5.0' \
-		nodejs-npm \
 		coreutils \
 		libusb \
 		pcsc-lite \
@@ -33,6 +31,8 @@ RUN set -x \
 		pcsc-lite-dev \
 		libusb-dev \
 		mercurial \
+		libtool\
+		flex\
 	\
 	&& npm install pm2 -g \
 	\
@@ -44,10 +44,10 @@ RUN set -x \
 	# arib
 	&& hg clone http://hg.honeyplanet.jp/pt1 -r b25 /tmp/b25 \
 	&& cd /tmp/b25/arib25/src \
-    && sed -i 's/ldconfig/echo ldconfig/g' Makefile \
-    && make \
-    && make install \
-    \
+	&& sed -i 's/ldconfig/echo ldconfig/g' Makefile \
+        && make \
+        && make install \
+        \
 	# recpt1
 	&& git clone https://github.com/stz2012/recpt1 /tmp/recpt1 \
 	&& cd /tmp/recpt1/recpt1 \
@@ -64,26 +64,28 @@ RUN set -x \
 	\
 	# ccid
 	&& cd /tmp \
-	&& curl -s https://alioth.debian.org/frs/download.php/file/4205/ccid-1.4.26.tar.bz2 -o ccid-latest.tar.bz2 \
-	&& tar xvf ccid-*.tar.bz2 \
-	&& cd ccid-* \
+	&& git clone --recursive https://salsa.debian.org/rousseau/CCID.git \
+	&& cd CCID \
+	&& ./bootstrap \
 	&& ./configure \
 	&& make \
 	&& make install \
 	\
 	# cleaning
 	&& cd / \
-	&& npm cache clean \
+	&& npm cache verify \
 	&& apk del --purge .build-deps \
-	&& rm -rf /tmp/* \
-	&& rm -rf /var/cache/apk/*
-
+	#&& rm -rf /tmp/* \
+	&& rm -rf /tmp/recpt1 \
+	&& rm -rf /tmp/ccid-* \
+	&& rm -rf /var/cache/apk/* 
+	
 	# forward request and error logs to docker log collector
 	#&& ln -sf /dev/stdout /usr/local/var/log/mirakurun.stdout-0.log \
 	#&& ln -sf /dev/stderr /usr/local/var/log/mirakurun.stderr-0.log
 
 COPY services.sh /usr/local/bin
 
-WORKDIR /usr/lib/node_modules/mirakurun
+WORKDIR /usr/local/lib/node_modules/mirakurun
 CMD ["/usr/local/bin/services.sh"]
 EXPOSE 40772
